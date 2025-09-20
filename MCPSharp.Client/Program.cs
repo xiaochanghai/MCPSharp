@@ -1,66 +1,66 @@
 ﻿using MCPSharp.Client;
-using ModelContextProtocol.Client; // 包含 McpClientFactory 和 McpClient 相关定义
-using ModelContextProtocol.Protocol.Transport; // 包含传输层相关类，如 SseClientTransport
+using ModelContextProtocol.Client; // Contains definitions for McpClientFactory and McpClient
+using ModelContextProtocol.Protocol.Transport; // Contains transport layer classes, such as SseClientTransport
 
-// 创建一个 SSE（Server-Sent Events）客户端传输配置实例
+// Create an SSE (Server-Sent Events) client transport configuration instance
 var config = new SseClientTransport(
     new SseClientTransportOptions()
     {
-        // 设置远程服务器的 URI 地址 (记得替换真实的地址，从魔搭MCP广场获取)
+        // Set the URI address of the remote server (remember to replace with the actual address from ModelScope MCP Plaza)
         Endpoint = new Uri("http://localhost:5196/mcp"),
         UseStreamableHttp = true
     }
 );
 
-// 使用配置创建 MCP 客户端实例
+// Create an MCP client instance using the above configuration
 var client = await McpClientFactory.CreateAsync(config);
 
-// 调用客户端的 ListToolsAsync 方法，获取可用工具列表
+// Call the client's ListToolsAsync method to retrieve the list of available tools
 var listToolsResult = await client.ListToolsAsync();
 
-Console.WriteLine("功能列表:");
-// 遍历工具列表，并逐个输出到控制台
+Console.WriteLine("Available Tools:");
+// Iterate through the tool list and print each one to the console
 foreach (var tool in listToolsResult)
 {
-    Console.WriteLine($"  名称：{tool.Name}，说明：{tool.Description}");
+    Console.WriteLine($"  Name: {tool.Name}, Description: {tool.Description}");
 }
 
-// 输出欢迎信息，提示用户开始与 MCP AI 交互
-Console.WriteLine("MCP Client成功启动，开启体验！输入 exit 退出！");
+// Print welcome message, prompting user to start interacting with MCP AI
+Console.WriteLine("MCP Client started successfully. Start your experience! Type 'exit' to quit.");
 
-// 创建聊天客户端实例
+// Create an instance of the chat client
 ChatAIClient chatAIClient = new ChatAIClient();
 
-// 进入主循环，持续接收用户输入直到输入 "exit"
+// Enter main loop: continuously accept user input until "exit" is entered
 while (true)
 {
     try
     {
-        // 设置控制台文字颜色为黄色，提示用户输入问题
+        // Set console text color to yellow to prompt user for input
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write("\n提问: ");
+        Console.Write("\nAsk: ");
 
-        // 读取用户输入并去除前后空格，若为空则赋默认空字符串
+        // Read user input, trim whitespace; assign empty string if null
         string query = Console.ReadLine()?.Trim() ?? string.Empty;
 
-        // 判断用户是否输入 "exit" 以退出程序
+        // Check if user typed "exit" to quit the program
         if (query.ToLower() == "exit")
         {
             break;
         }
 
-        // 调用异步方法处理用户查询，并传入预定义的工具列表（listToolsResult）
-        string response = await chatAIClient.ProcessQueryAsync(query, listToolsResult); 
-        // 设置输出颜色为黄色，显示 AI 的响应内容
+        // Call async method to process user query, passing in the pre-fetched tool list (listToolsResult)
+        string response = await chatAIClient.ProcessQueryAsync(query, listToolsResult);
+        // Set output color to yellow to display AI's response
         Console.ForegroundColor = ConsoleColor.Yellow;
-        //Console.WriteLine($"AI：{response}");
+        //Console.WriteLine($"AI: {response}");
 
-        // 恢复控制台默认颜色（白色）
+        // Reset console color to default (white)
         Console.ForegroundColor = ConsoleColor.White;
     }
     catch (Exception ex)
     {
-        // 捕获所有异常并输出错误信息，防止程序崩溃
+        // Catch any exception and print error message to prevent crash
         Console.WriteLine($"\nError: {ex.Message}");
     }
 }
