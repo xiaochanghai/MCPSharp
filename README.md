@@ -1,5 +1,7 @@
 # MCPSharp
 
+[English](README.en.md) | 中文
+
 一个基于 .NET 8 实现的 Model Context Protocol (MCP) 服务端和客户端框架，支持 AI 助手与外部工具的交互。
 
 ## 🚀 项目简介
