@@ -7,7 +7,7 @@ var config = new SseClientTransport(
     new SseClientTransportOptions()
     {
         // 设置远程服务器的 URI 地址 (记得替换真实的地址，从魔搭MCP广场获取)
-        Endpoint = new Uri("http://localhost:8016/Supplier/mcp"),
+        Endpoint = new Uri("http://localhost:5196/mcp"),
         UseStreamableHttp = true
     }
 );
