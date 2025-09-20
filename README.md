@@ -9,7 +9,7 @@ MCPSharp 是一个完整的 MCP 协议实现，旨在提供高性能、易扩展
 - **MCPSharp.API**: MCP 服务端，提供工具注册和 JSON-RPC 接口
 - **MCPSharp.Client**: MCP 客户端，支持与 AI 模型集成和工具调用
 
-## �� 项目结构
+## 📁 项目结构
 
 ```markdown:README.md
 MCPSharp/
