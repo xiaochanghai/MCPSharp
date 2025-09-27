@@ -1,37 +1,38 @@
 using MCPSharp.API.Attributes;
 using MCPSharp.API.Models.Mcp;
-using Microsoft.AspNetCore.Mvc;
 using System.Dynamic;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace MCPSharp.API.Interfaces;
 
-public class BaseService<IServiceBase> : IBaseService
+public class BaseService<TService> : IBaseService where TService : class
 {
-    private readonly ILogger<BaseService<IServiceBase>> _logger;
+    private readonly ILogger<BaseService<TService>> _logger;
     private readonly Dictionary<string, MethodInfo> _toolMethods;
-    private IServiceBase? _serviceInstance; // Remove readonly
+    private readonly Lazy<TService> _serviceInstance;
 
-    public BaseService(ILogger<BaseService<IServiceBase>> logger)
+    public BaseService(ILogger<BaseService<TService>> logger)
     {
         _logger = logger;
         _toolMethods = new Dictionary<string, MethodInfo>();
+
+        _serviceInstance = new Lazy<TService>(() =>
+        {
+            if (this is TService service)
+            {
+                DiscoverMcpMethods();
+                return service;
+            }
+            throw new InvalidOperationException($"Service must implement {typeof(TService).Name}");
+        });
     }
 
-    // Add a protected method to set the service instance
-    protected void InitializeService(IServiceBase serviceInstance)
-    {
-        _serviceInstance = serviceInstance;
-
-        // Automatically discover tools, resources, and prompts
-        DiscoverMcpMethods();
-    }
+    protected TService ServiceInstance => _serviceInstance.Value;
 
     private void DiscoverMcpMethods()
     {
-        var type = typeof(IServiceBase);
+        var type = typeof(TService);
 
         // Discover tool methods
         foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
@@ -147,6 +148,8 @@ public class BaseService<IServiceBase> : IBaseService
 
     public virtual IEnumerable<McpTool> GetTools()
     {
+        _ = ServiceInstance;
+
         var tools = new List<McpTool>();
 
         // Dynamically generate tool list
@@ -172,7 +175,11 @@ public class BaseService<IServiceBase> : IBaseService
         return tools;
     }
 
-    public bool CanHandle(string toolName) => _toolMethods.ContainsKey(toolName);
+    public bool CanHandle(string toolName)
+    {
+        _ = ServiceInstance;
+        return _toolMethods.ContainsKey(toolName);
+    }
 
     public virtual async Task<McpToolResult> ExecuteToolAsync(string toolName, JsonElement arguments, dynamic? dynamicObject)
     {
@@ -186,7 +193,7 @@ public class BaseService<IServiceBase> : IBaseService
         try
         {
             // Dynamically invoke service method
-            var result = method.Invoke(_serviceInstance, [dynamicObject]);
+            var result = method.Invoke(ServiceInstance, [dynamicObject]);
 
             // If method is async, await completion
             if (result is Task task)

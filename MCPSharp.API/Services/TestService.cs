@@ -19,8 +19,7 @@ public class InputSchemaArguments()
 public class TestService : BaseService<TestService>, ITestService
 {
     public TestService(ILogger<TestService> logger) : base(logger)
-    {
-        InitializeService(this);
+    { 
     }
 
     [McpTool("test_hello", "A simple test supplier tool that says hello", typeof(InputSchemaArguments))]
