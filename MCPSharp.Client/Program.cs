@@ -1,19 +1,17 @@
 ﻿using MCPSharp.Client;
 using ModelContextProtocol.Client; // Contains definitions for McpClientFactory and McpClient
-using ModelContextProtocol.Protocol.Transport; // Contains transport layer classes, such as SseClientTransport
 
 // Create an SSE (Server-Sent Events) client transport configuration instance
-var config = new SseClientTransport(
-    new SseClientTransportOptions()
+var config = new HttpClientTransport(
+    new HttpClientTransportOptions()
     {
         // Set the URI address of the remote server (remember to replace with the actual address from ModelScope MCP Plaza)
         Endpoint = new Uri("http://localhost:5196/mcp"),
-        UseStreamableHttp = true
     }
 );
 
 // Create an MCP client instance using the above configuration
-var client = await McpClientFactory.CreateAsync(config);
+    var client = await McpClient.CreateAsync(config);
 
 // Call the client's ListToolsAsync method to retrieve the list of available tools
 var listToolsResult = await client.ListToolsAsync();
