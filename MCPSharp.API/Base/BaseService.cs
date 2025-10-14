@@ -59,7 +59,7 @@ public class BaseService<TService> : IBaseService where TService : class
             },
             serverInfo = new McpServerInfo
             {
-                Name = "EU.Core FastMCP Server",
+                Name = "MCPSharp Server",
                 Version = "1.0.0"
             }
         };

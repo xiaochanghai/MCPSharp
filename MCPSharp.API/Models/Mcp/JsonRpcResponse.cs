@@ -61,7 +61,7 @@ public class McpServerCapabilities
 public class McpServerInfo
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; } = "EU.Core FastMCP Server";
+    public string Name { get; set; } = "MCPSharp Server";
 
     [JsonPropertyName("version")]
     public string Version { get; set; } = "1.0.0";
