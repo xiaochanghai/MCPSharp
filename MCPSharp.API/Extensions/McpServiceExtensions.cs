@@ -3,6 +3,9 @@ using MCPSharp.API.Services;
 
 namespace MCPSharp.API.Extensions;
 
+/// <summary>
+/// ServiceExtension
+/// </summary>
 public static class McpServiceExtensions
 {
     /// <summary>
