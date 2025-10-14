@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 
 // Register our services
 builder.Services.AddMcpServices();
+builder.Services.AddSwaggerSetup();
 
 var app = builder.Build();
 

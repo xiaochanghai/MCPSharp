@@ -2,6 +2,9 @@
 
 namespace MCPSharp.API;
 
+/// <summary>
+/// JsonHelper
+/// </summary>
 public class JsonHelper
 {
     /// <summary>
