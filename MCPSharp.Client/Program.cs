@@ -6,7 +6,7 @@ var config = new HttpClientTransport(
     new HttpClientTransportOptions()
     {
         // Set the URI address of the remote server (remember to replace with the actual address from ModelScope MCP Plaza)
-        Endpoint = new Uri("http://localhost:5196/mcp"),
+        Endpoint = new Uri("http://localhost:8020/Supplier/mcp"),
     }
 );
 
